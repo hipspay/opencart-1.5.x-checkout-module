@@ -1,0 +1,48 @@
+<modification>
+  <name>Hips Checkout</name>
+  <version>1.5</version>
+  <link>http://opensourcetechnologies.com/</link>
+  <author>OpenSource Technologies</author>
+  <code>Hips_Checkout_OpenCart15 - 1.5</code>
+  
+  <file name="catalog/controller/checkout/checkout.php">
+    <operation>
+      <search position="after"><![CDATA[public function index() {]]></search>
+      <add><![CDATA[if($this->config->get('hips_checkout_status') && $this->cart->getTotal() >= $this->config->get('hips_total') && $this->config->get('hips_payment_type')=="full"){     $this->redirect($this->url->link('payment/hips_checkout'));   
+  }]]></add>
+    </operation>
+  </file>
+
+
+  <file name="catalog/controller/module/cart.php">
+    <operation>
+      <search position="replace"><![CDATA[$this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');]]></search>
+      <add><![CDATA[if($this->config->get('hips_checkout_status') && $this->cart->getTotal() >= $this->config->get('hips_total') && $this->config->get('hips_payment_type')=="full"){$this->data['checkout'] = $this->url->link('payment/hips_checkout', '', 'SSL');}
+        else{ $this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL'); }]]></add>
+    </operation>
+  </file>
+    
+  <file name="catalog/controller/common/header.php">
+    <operation>
+      <search position="replace"><![CDATA[$this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');]]></search>
+      <add><![CDATA[if($this->config->get('hips_checkout_status') && $this->cart->getTotal() >= $this->config->get('hips_total') && $this->config->get('hips_payment_type')=="full"){$this->data['checkout'] = $this->url->link('payment/hips_checkout', '', 'SSL');}
+        else{ $this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL'); }]]></add>
+    </operation>
+  </file>
+  
+  <file name="catalog/controller/checkout/cart.php">
+    <operation>
+      <search position="replace"><![CDATA[$this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');]]></search>
+      <add><![CDATA[if($this->config->get('hips_checkout_status') && $this->cart->getTotal() >= $this->config->get('hips_total') && $this->config->get('hips_payment_type')=="full"){$this->data['checkout'] = $this->url->link('payment/hips_checkout', '', 'SSL');}
+      	else{ $this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL'); }]]></add>
+    </operation>
+  </file>
+
+  <file name="catalog/view/theme/default/template/module/cart.tpl">
+    <operation>
+      <search position="replace"><![CDATA[td class="remove"><img src="catalog/view/theme/default/image/remove-small.png" alt="<?php echo $button_remove; ?>" title="<?php echo $button_remove; ?>" onclick="(getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') ? location = 'index.php?route=checkout/cart&remove=<?php echo $product['key']; ?>' : $('#cart').load('index.php?route=module/cart&remove=<?php echo $product['key']; ?>' + ' #cart > *');" /></td>]]></search>
+      <add>
+        <![CDATA[<td class="remove"><img src="catalog/view/theme/default/image/remove-small.png" alt="<?php echo $button_remove; ?>" title="<?php echo $button_remove; ?>" onclick="(getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout'  || getURLVar('route') == 'payment/hips_checkout') ? location = 'index.php?route=checkout/cart&remove=<?php echo $product['key']; ?>' : $('#cart').load('index.php?route=module/cart&remove=<?php echo $product['key']; ?>' + ' #cart > *');" /></td>]]></add>
+    </operation>
+  </file>
+</modification>
